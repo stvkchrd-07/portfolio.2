@@ -4,11 +4,17 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Image from 'next/image';
+import type { Project } from '../types';
 
-const ProjectModal = ({ project, onClose }) => {
+interface ProjectModalProps {
+    project: Project | null;
+    onClose: () => void;
+}
+
+const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     // Add ESC key to close
     useEffect(() => {
-        const handleEsc = (e) => {
+        const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
         };
         window.addEventListener('keydown', handleEsc);

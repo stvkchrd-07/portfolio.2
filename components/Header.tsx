@@ -5,7 +5,11 @@ import { motion } from 'framer-motion';
 import { ThemeToggle } from './ThemeToggle';
 import { FadeIn } from './animations/FadeIn';
 
-const Header = ({ isBlog = false }) => {
+interface HeaderProps {
+  isBlog?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ isBlog = false }) => {
   const container = {
     hidden: { opacity: 0 },
     show: {
