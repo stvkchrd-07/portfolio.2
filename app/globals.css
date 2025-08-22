@@ -1,26 +1,214 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
+    --background: #ffffff;
+    --foreground: #0a0a0a;
+    --card: #ffffff;
+    --card-foreground: #0a0a0a;
+    --popover: #ffffff;
+    --popover-foreground: #0a0a0a;
+    --primary: #171717;
+    --primary-foreground: #fafafa;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #171717;
+    --muted: #f5f5f5;
+    --muted-foreground: #737373;
+    --accent: #f5f5f5;
+    --accent-foreground: #171717;
+    --destructive: #ef4444;
+    --destructive-foreground: #fafafa;
+    --border: #e5e5e5;
+    --input: #e5e5e5;
+    --ring: #171717;
+    --radius: 0.75rem;
+  }
+
+  .dark {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #fafafa;
+    --card: #0a0a0a;
+    --card-foreground: #fafafa;
+    --popover: #0a0a0a;
+    --popover-foreground: #fafafa;
+    --primary: #fafafa;
+    --primary-foreground: #171717;
+    --secondary: #262626;
+    --secondary-foreground: #fafafa;
+    --muted: #262626;
+    --muted-foreground: #a3a3a3;
+    --accent: #262626;
+    --accent-foreground: #fafafa;
+    --destructive: #7f1d1d;
+    --destructive-foreground: #fafafa;
+    --border: #262626;
+    --input: #262626;
+    --ring: #d4d4d4;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
+
+.brutalist-hover {
+    transition: none;
+}
+.brutalist-hover:hover {
+    background-color: #000000;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+* {
+    border-radius: 0 !important;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+}
+
+/* Custom prose styles for markdown content */
+.prose h1, .prose h2, .prose h3 {
+    font-weight: 900;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.prose p { margin-bottom: 1em; line-height: 1.6; }
+.prose a { color: #000; text-decoration: underline; }
+.prose ul, .prose ol { margin-left: 1.5rem; margin-bottom: 1em; }
+.prose li { margin-bottom: 0.5em; }
+.prose blockquote {
+    border-left: 4px solid #000;
+    padding-left: 1rem;
+    margin-left: 0;
+    font-style: italic;
+    color: #333;
+}
+.prose pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1em;
+}
+.prose code {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f4f4f4;
+    padding: 0.2em 0.4em;
+}
+.prose pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Three.js Canvas Background (from static site) */
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Loading Screen Styles (migrated from static site) */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#loader-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 5vw;
+    color: #000000;
+}
+#loader-bar-container {
+    width: 80%;
+    max-width: 400px;
+    height: 8px;
+    border: 1px solid #000;
+    margin-top: 20px;
+}
+#loader-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #000;
+}
+
+/* Project modal/utility tweaks from static site */
+#project-modal { display: none; }
+.modal-content { background-color: #fff; margin: 10% auto; padding: 2rem; border: 2px solid #000; width: 90%; max-width: 700px; position: relative; }
+.close-button { position: absolute; top: 1rem; right: 1rem; font-size: 2rem; font-weight: 900; cursor: pointer; line-height: 1; }
+
+/* Responsive header size and spacing adjustments from static site */
+header .font-black.text-5xl,
+header .font-black.text-6xl,
+header .font-black.text-7xl {
+    font-size: 2.25rem !important;
+}
+@media (min-width: 640px) {
+    header .font-black.text-5xl,
+    header .font-black.text-6xl,
+    header .font-black.text-7xl {
+        font-size: 2.5rem !important;
+    }
+}
+@media (min-width: 768px) {
+    header .font-black.text-5xl,
+    header .font-black.text-6xl,
+    header .font-black.text-7xl {
+        font-size: 3rem !important;
+    }
+}
+
+/* Reduced paddings and card sizes */
+.border-2.p-6,
+.border-2.p-8 { padding: 1rem !important; }
+@media (min-width: 768px) {
+  .border-2.p-6,
+  .border-2.p-8 { padding: 1.5rem !important; }
+}
+.content-wrapper { padding: 0.5rem !important; }
+footer, header { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+footer .mb-2, header .mt-2 { margin-bottom: 0.5rem !important; margin-top: 0.5rem !important; }
+
+/* Copy Toast Notification Styles */
+#copy-toast {
+    visibility: hidden;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    z-index: 101;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+#copy-toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+/* End of globals.css */

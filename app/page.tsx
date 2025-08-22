@@ -1,103 +1,141 @@
-import Image from "next/image";
+
+"use client";
+import React, { useState, useEffect } from 'react';
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
+const ThreeCanvas = dynamic(() => import("../components/ThreeCanvas"), {
+  ssr: false,
+  loading: () => null,
+});
+import ProjectModal from '../components/ProjectModal';
+import { supabase } from '../lib/supabaseClient';
+import type { Project } from '../types';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+      const { data, error } = await supabase.from('projects').select('*').order('id', { ascending: false });
+      if (error) {
+        console.error('Error fetching projects:', error);
+      } else {
+        setProjects((data || []) as Project[]);
+      }
+      setLoading(false);
+    };
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    // Animate loader to 100% when projects are loaded
+    const loader = document.getElementById('loader');
+    const loaderBar = document.getElementById('loader-bar');
+    const loaderText = document.getElementById('loader-text');
+    if (!loader) return;
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      if (loaderBar) loaderBar.style.width = `${Math.min(progress, 100)}%`;
+      if (loaderText) loaderText.textContent = `${Math.min(progress, 100)}%`;
+      if (progress >= 100 || !loading) {
+        clearInterval(interval);
+        setTimeout(() => { loader.style.display = 'none'; }, 300);
+      }
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  const openModal = (project: Project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedProject(null);
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div className="relative min-h-screen bg-background text-foreground font-sans antialiased">
+      <ThreeCanvas />
+      <div className="content-wrapper max-w-7xl mx-auto p-4 md:p-8 relative z-10">
+        <Header />
+        <main className="grid grid-cols-1 lg:grid-cols-1 gap-8 md:gap-12">
+          <section id="projects">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="font-black text-4xl md:text-5xl mb-6"
+            >
+              Projects
+            </motion.h2>
+            {loading ? (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-muted-foreground"
+              >
+                Loading projects...
+              </motion.p>
+            ) : (
+              <motion.div
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: {},
+                  show: {
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
+                {projects.map((project, i) => (
+                  <motion.div
+                    key={project.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      show: { opacity: 1, y: 0 }
+                    }}
+                    onClick={() => openModal(project)}
+                    className="group relative overflow-hidden border-2 border-border p-6 bg-background/80 backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/20"
+                    whileHover={{
+                      scale: 1.02,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.h3 
+                      className="font-black text-2xl md:text-3xl text-foreground"
+                      initial={{ y: 0 }}
+                      whileHover={{ y: -2 }}
+                    >
+                      {project.title}
+                    </motion.h3>
+                    <p className="mt-2 text-base text-muted-foreground">{project.subtitle}</p>
+                    <div className="absolute inset-0 border-2 border-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+            <div className="h-32 md:h-64 lg:h-96"></div>
+          </section>
+        </main>
+        <Footer />
+      </div>
+      {isModalOpen && <ProjectModal project={selectedProject} onClose={closeModal} />}
     </div>
   );
 }
