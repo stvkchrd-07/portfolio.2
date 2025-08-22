@@ -110,7 +110,7 @@ export default function Home() {
                       show: { opacity: 1, y: 0 }
                     }}
                     onClick={() => openModal(project)}
-                    className="group relative overflow-hidden border-2 border-border p-6 bg-background/80 backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/20"
+                    className="group relative overflow-hidden border-2 p-6 bg-background/80 backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/20"
                     whileHover={{
                       scale: 1.02,
                       transition: { duration: 0.2 }
@@ -125,7 +125,7 @@ export default function Home() {
                       {project.title}
                     </motion.h3>
                     <p className="mt-2 text-base text-muted-foreground">{project.subtitle}</p>
-                    <div className="absolute inset-0 border-2 border-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="absolute inset-0 border-2 opacity-0 transition-opacity group-hover:opacity-100 group-hover:border-primary" />
                   </motion.div>
                 ))}
               </motion.div>

@@ -36,7 +36,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
                         transition={{ type: "spring", duration: 0.4 }}
-                        className="modal-content bg-card border-2 border-border p-6 md:p-8 w-full max-w-2xl relative shadow-lg dark:shadow-primary/20"
+                        className="modal-content bg-card border-2 p-6 md:p-8 w-full max-w-2xl relative shadow-lg dark:shadow-primary/20"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <motion.button
@@ -71,7 +71,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2 }}
-                                className="relative w-full h-64 md:h-96 mb-4 border-2 border-border overflow-hidden"
+                                className="relative w-full h-64 md:h-96 mb-4 border-2 overflow-hidden"
                             >
                                 <Image
                                     src={project.imageUrl}
@@ -95,7 +95,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
                                 href={project.liveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block border-2 border-border px-4 py-2 font-bold text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                                className="inline-block border-2 px-4 py-2 font-bold text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                             >
                                 VIEW LIVE PROJECT
                             </motion.a>
