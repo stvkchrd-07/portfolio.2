@@ -7,10 +7,10 @@ import { useRouter } from 'next/navigation';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
@@ -21,8 +21,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white p-8 border-2 border-black">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="max-w-md w-full bg-card p-8 border-2 border-border">
         <h1 className="font-black text-4xl mb-8 text-center">Admin Login</h1>
         <form onSubmit={handleLogin}>
           <input
@@ -30,7 +30,7 @@ const LoginPage = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border-2 border-black mb-4"
+            className="w-full p-3 border-2 border-border mb-4"
             required
           />
           <input
@@ -38,10 +38,10 @@ const LoginPage = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border-2 border-black mb-4"
+            className="w-full p-3 border-2 border-border mb-4"
             required
           />
-          <button type="submit" className="w-full bg-black text-white font-bold py-3 px-4 border-2 border-black hover:bg-white hover:text-black">
+          <button type="submit" className="w-full bg-primary text-primary-foreground font-bold py-3 px-4 border-2 border-border hover:bg-background hover:text-foreground">
             Log In
           </button>
           {error && <p className="text-red-600 mt-4">{error}</p>}

@@ -4,8 +4,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useTheme } from 'next-themes';
 import * as THREE from 'three';
 
-const Particles = ({ isDark }) => {
-  const points = useRef();
+type ParticlesProps = { isDark: boolean };
+
+const Particles: React.FC<ParticlesProps> = ({ isDark }) => {
+  const points = useRef<THREE.Points>(null);
 
   const particleCount = 2000;
   const positions = useMemo(() => {
@@ -16,10 +18,10 @@ const Particles = ({ isDark }) => {
     return positions;
   }, []);
 
-  const mouse = useRef([0, 0]);
+  const mouse = useRef<[number, number]>([0, 0]);
 
   React.useEffect(() => {
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: MouseEvent) => {
       mouse.current[0] = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.current[1] = -(event.clientY / window.innerHeight) * 2 + 1;
     };
@@ -29,26 +31,25 @@ const Particles = ({ isDark }) => {
 
   useFrame((state) => {
     const elapsedTime = state.clock.getElapsedTime();
-    points.current.rotation.y = -0.04 * elapsedTime;
-    points.current.rotation.x = -0.04 * elapsedTime;
+    if (points.current) {
+      points.current.rotation.y = -0.04 * elapsedTime;
+      points.current.rotation.x = -0.04 * elapsedTime;
+    }
 
     if (mouse.current[0] !== 0 && mouse.current[1] !== 0) {
       const targetX = mouse.current[0] * 0.2;
       const targetY = mouse.current[1] * 0.2;
-      points.current.rotation.y += (targetX - points.current.rotation.y) * 0.01;
-      points.current.rotation.x += (targetY - points.current.rotation.x) * 0.01;
+      if (points.current) {
+        points.current.rotation.y += (targetX - points.current.rotation.y) * 0.01;
+        points.current.rotation.x += (targetY - points.current.rotation.x) * 0.01;
+      }
     }
   });
 
   return (
     <points ref={points}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial color={isDark ? 0xFFFFFF : 0x000000} size={0.02} sizeAttenuation transparent opacity={0.8} />
     </points>
