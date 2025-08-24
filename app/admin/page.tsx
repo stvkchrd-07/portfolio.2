@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import type { Project, Post } from '../../types';
+import type { User } from '@supabase/supabase-js';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const slugify = (text: string): string => {
@@ -16,7 +18,7 @@ const slugify = (text: string): string => {
 };
 
 const AdminPage = () => {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,7 +118,7 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="p-4 md:p-8 bg-gray-100">
+    <div className="p-4 md:p-8 bg-background">
         {successMessage && (
             <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
                 {successMessage}
@@ -124,10 +126,10 @@ const AdminPage = () => {
         )}
         <div className="content-wrapper max-w-7xl mx-auto">
             <header className="mb-12">
-                <div className="flex justify-between items-center border-b-2 border-black pb-4">
+                <div className="flex justify-between items-center border-b-2 border-border pb-4">
                     <h1 className="font-black text-4xl md:text-6xl tracking-tighter">Admin Panel</h1>
                     <div>
-                      <a href="/" className="underline hover:no-underline font-bold mr-4">← Back to Site</a>
+                      <Link href="/" className="underline hover:no-underline font-bold mr-4">← Back to Site</Link>
                       <button onClick={handleLogout} className="underline hover:no-underline font-bold">Logout</button>
                     </div>
                 </div>
@@ -136,21 +138,21 @@ const AdminPage = () => {
             <main className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <section id="manage-projects">
                     <h2 className="font-black text-3xl md:text-4xl mb-6">Manage Projects</h2>
-                    <div className="border-2 border-black p-6 bg-white mb-8">
+                    <div className="border-2 border-border p-6 bg-card mb-8">
                         <h3 className="font-black text-2xl mb-4">Add New Project</h3>
                         <form onSubmit={handleAddProject}>
-                            <input type="text" placeholder="Project Title" value={newProject.title} onChange={(e) => setNewProject({ ...newProject, title: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <input type="text" placeholder="Subtitle" value={newProject.subtitle} onChange={(e) => setNewProject({ ...newProject, subtitle: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <textarea placeholder="Description" value={newProject.description} onChange={(e) => setNewProject({ ...newProject, description: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <input type="url" placeholder="Image URL" value={newProject.imageUrl} onChange={(e) => setNewProject({ ...newProject, imageUrl: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <input type="url" placeholder="Live URL" value={newProject.liveUrl} onChange={(e) => setNewProject({ ...newProject, liveUrl: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <button type="submit" className="bg-black text-white font-bold py-2 px-4 border-2 border-black hover:bg-white hover:text-black">Add Project</button>
+                            <input type="text" placeholder="Project Title" value={newProject.title} onChange={(e) => setNewProject({ ...newProject, title: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <input type="text" placeholder="Subtitle" value={newProject.subtitle} onChange={(e) => setNewProject({ ...newProject, subtitle: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <textarea placeholder="Description" value={newProject.description} onChange={(e) => setNewProject({ ...newProject, description: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <input type="url" placeholder="Image URL" value={newProject.imageUrl} onChange={(e) => setNewProject({ ...newProject, imageUrl: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <input type="url" placeholder="Live URL" value={newProject.liveUrl} onChange={(e) => setNewProject({ ...newProject, liveUrl: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <button type="submit" className="bg-primary text-primary-foreground font-bold py-2 px-4 border-2 border-border hover:bg-background hover:text-foreground">Add Project</button>
                         </form>
                     </div>
                     <h3 className="font-black text-2xl mb-4">Existing Projects</h3>
                     <div className="space-y-4">
                         {projects.map(p => (
-                            <div key={p.id} className="border-2 border-black p-4 bg-white flex justify-between items-center">
+                            <div key={p.id} className="border-2 border-border p-4 bg-card flex justify-between items-center">
                                 <div>
                                     <h4 className="font-bold text-xl">{p.title}</h4>
                                     <p>{p.subtitle}</p>
@@ -163,19 +165,19 @@ const AdminPage = () => {
 
                 <section id="manage-blog">
                     <h2 className="font-black text-3xl md:text-4xl mb-6">Manage Blog</h2>
-                    <div className="border-2 border-black p-6 bg-white mb-8">
+                    <div className="border-2 border-border p-6 bg-card mb-8">
                         <h3 className="font-black text-2xl mb-4">Add New Blog Post</h3>
                         <form onSubmit={handleAddPost}>
-                            <input type="text" placeholder="Blog Title" value={newPost.title} onChange={(e) => setNewPost({ ...newPost, title: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <input type="date" value={newPost.date} onChange={(e) => setNewPost({ ...newPost, date: e.target.value })} className="w-full p-2 border-2 border-black mb-4" required />
-                            <textarea placeholder="Blog Content (Markdown)" value={newPost.content} onChange={(e) => setNewPost({ ...newPost, content: e.target.value })} className="w-full p-2 border-2 border-black mb-4 h-48" required />
-                            <button type="submit" className="bg-black text-white font-bold py-2 px-4 border-2 border-black hover:bg-white hover:text-black">Add Post</button>
+                            <input type="text" placeholder="Blog Title" value={newPost.title} onChange={(e) => setNewPost({ ...newPost, title: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <input type="date" value={newPost.date} onChange={(e) => setNewPost({ ...newPost, date: e.target.value })} className="w-full p-2 border-2 border-border mb-4" required />
+                            <textarea placeholder="Blog Content (Markdown)" value={newPost.content} onChange={(e) => setNewPost({ ...newPost, content: e.target.value })} className="w-full p-2 border-2 border-border mb-4 h-48" required />
+                            <button type="submit" className="bg-primary text-primary-foreground font-bold py-2 px-4 border-2 border-border hover:bg-background hover:text-foreground">Add Post</button>
                         </form>
                     </div>
                     <h3 className="font-black text-2xl mb-4">Existing Posts</h3>
                     <div className="space-y-4">
                         {posts.map(p => (
-                            <div key={p.id} className="border-2 border-black p-4 bg-white flex justify-between items-center">
+                            <div key={p.id} className="border-2 border-border p-4 bg-card flex justify-between items-center">
                                 <div>
                                     <h4 className="font-bold text-xl">{p.title}</h4>
                                     <p>{new Date(p.date).toLocaleDateString()}</p>

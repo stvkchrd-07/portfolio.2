@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
 import { marked } from 'marked';
 
+export const dynamic = 'force-dynamic';
+
 async function getPosts() {
   const { data, error } = await supabase.from('posts').select('*').order('date', { ascending: false });
   if (error) {
@@ -23,7 +25,7 @@ const BlogList = async () => {
         const summaryHtml = marked.parse(summaryMarkdown);
 
         return (
-          <div key={post.id} className="border-2 border-black p-6 md:p-8 bg-white/80 backdrop-blur-sm">
+          <div key={post.id} className="border-2 border-border p-6 md:p-8 bg-background/80 backdrop-blur-sm">
             <p className="text-base mb-2">{new Date(post.date).toLocaleDateString()}</p>
             <h2 className="font-black text-3xl md:text-4xl mb-4">{post.title}</h2>
             <div className="text-lg mb-4 post-summary" dangerouslySetInnerHTML={{ __html: summaryHtml }}></div>

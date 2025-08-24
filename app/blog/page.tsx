@@ -4,9 +4,11 @@ import Footer from '../../components/Footer';
 import ThreeCanvas from '../../components/ThreeCanvas';
 import BlogList from '../../components/BlogList';
 
+export const dynamic = 'force-dynamic';
+
 const BlogPage = () => {
   return (
-    <div className="relative min-h-screen bg-white text-black font-sans">
+    <div className="relative min-h-screen bg-background text-foreground font-sans">
       <ThreeCanvas />
       <div className="content-wrapper max-w-7xl mx-auto p-4 md:p-8 relative z-10">
         <Header isBlog={true} />
